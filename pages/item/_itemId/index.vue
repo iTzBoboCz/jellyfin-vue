@@ -54,7 +54,7 @@
             </div>
             <div class="mt-3 mb-2">
               <v-btn
-                v-if="loaded"
+                v-if="loaded && canPlay(item)"
                 class="play-button mr-2"
                 color="primary"
                 min-width="8em"
@@ -293,9 +293,10 @@ import {
   MediaStream
 } from '@jellyfin/client-axios';
 import imageHelper from '~/mixins/imageHelper';
+import itemHelper from '~/mixins/itemHelper';
 
 export default Vue.extend({
-  mixins: [imageHelper],
+  mixins: [imageHelper, itemHelper],
   data() {
     return {
       loaded: false,

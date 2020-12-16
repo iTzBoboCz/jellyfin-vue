@@ -44,3 +44,16 @@
 .layout-leave-to {
   opacity: 0;
 }
+
+.v-navigation-drawer--fixed,
+.v-footer--fixed {
+  z-index: 100 !important;
+}
+
+.link {
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

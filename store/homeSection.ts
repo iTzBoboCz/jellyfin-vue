@@ -105,7 +105,7 @@ export const actions: ActionTree<HomeSectionState, AppState> = {
     try {
       const { data } = await this.$api.items.getResumeItems({
         userId: this.$auth.user.Id,
-        limit: 12,
+        limit: 24,
         fields: [ItemFields.PrimaryImageAspectRatio],
         imageTypeLimit: 1,
         enableImageTypes: [
@@ -143,7 +143,7 @@ export const actions: ActionTree<HomeSectionState, AppState> = {
     try {
       const { data } = await this.$api.items.getResumeItems({
         userId: this.$auth.user.Id,
-        limit: 12,
+        limit: 24,
         fields: [ItemFields.PrimaryImageAspectRatio],
         imageTypeLimit: 1,
         enableImageTypes: [
@@ -181,7 +181,7 @@ export const actions: ActionTree<HomeSectionState, AppState> = {
     try {
       const { data } = await this.$api.tvShows.getNextUp({
         userId: this.$auth.user.Id,
-        limit: 12,
+        limit: 24,
         fields: [ItemFields.PrimaryImageAspectRatio],
         imageTypeLimit: 1,
         enableImageTypes: [
@@ -218,7 +218,7 @@ export const actions: ActionTree<HomeSectionState, AppState> = {
     try {
       const { data } = await this.$api.userLibrary.getLatestMedia({
         userId: this.$auth.user.Id,
-        limit: 12,
+        limit: 24,
         fields: [ItemFields.PrimaryImageAspectRatio],
         imageTypeLimit: 1,
         enableImageTypes: [

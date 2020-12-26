@@ -45,7 +45,9 @@ export default Vue.extend({
     },
     items: {
       type: Object as () => BaseItemDto[],
-      required: true
+      default() {
+        return [];
+      }
     },
     shape: {
       type: String,

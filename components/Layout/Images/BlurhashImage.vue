@@ -37,6 +37,7 @@ import Vue from 'vue';
 import {
   BaseItemDto,
   BaseItemDtoImageBlurHashes,
+  BaseItemPerson,
   ImageType
 } from '@jellyfin/client-axios';
 import imageHelper from '~/mixins/imageHelper';
@@ -47,7 +48,7 @@ export default Vue.extend({
   mixins: [imageHelper],
   props: {
     item: {
-      type: Object as () => BaseItemDto,
+      type: Object as () => BaseItemDto | BaseItemPerson,
       required: true
     },
     width: {
@@ -84,68 +85,97 @@ export default Vue.extend({
     // We don't pass the item itself as we already did all the tags checking in this component,
     // so doing it again in the mixin is useless.
     this.image = this.getImageUrlForElement(this.type, {
-      itemId: this.item.Id,
+      itemId: this.item.Id as string,
       element: img
     });
   },
   methods: {
+    isPerson(obj: BaseItemDto | BaseItemPerson): obj is BaseItemPerson {
+      if ((obj as BaseItemPerson).Role) {
+        return true;
+      }
+      return false;
+    },
     isValidTag(): boolean {
-      if (
-        (this.item?.ImageTags &&
-          Object.prototype.hasOwnProperty.call(
-            this.item?.ImageTags,
-            this.type
-          )) ||
-        (this.type === ImageType.Backdrop &&
-          this.item?.BackdropImageTags &&
-          this.item?.BackdropImageTags.length > 0)
+      if (!this.isPerson(this.item)) {
+        if (
+          (this.item.ImageTags &&
+            Object.prototype.hasOwnProperty.call(
+              this.item?.ImageTags,
+              this.type
+            )) ||
+          (this.type === ImageType.Backdrop && this.item?.BackdropImageTags)
+        ) {
+          return true;
+        } else {
+          this.onError();
+        }
+      } else if (
+        this.item?.PrimaryImageTag &&
+        this.type === ImageType.Primary
       ) {
         return true;
       } else {
         this.onError();
-        return false;
       }
+      return false;
     },
     canBeBlurhashed(): boolean {
-      if (
-        excludedTypes.includes(this.type) ||
-        (this.item?.ImageBlurHashes as Array<never>).length === 0
-      ) {
+      if (excludedTypes.includes(this.type) || !this.item?.ImageBlurHashes) {
         return false;
+      } else if (!this.isPerson(this.item)) {
+        if (
+          this.type === ImageType.Backdrop &&
+          !this.item?.BackdropImageTags &&
+          this.item.ImageBlurHashes?.Backdrop &&
+          Object.prototype.hasOwnProperty.call(
+            this.item.ImageBlurHashes?.Backdrop as Record<string, string>,
+            (this.item.BackdropImageTags as Array<string>)[0]
+          )
+        ) {
+          return true;
+        } else if (
+          Object.prototype.hasOwnProperty.call(
+            this.item?.ImageBlurHashes,
+            this.type
+          )
+        ) {
+          return true;
+        }
       } else if (
+        this.item.PrimaryImageTag &&
+        this.type === ImageType.Primary &&
         Object.prototype.hasOwnProperty.call(
           this.item?.ImageBlurHashes,
           this.type
         ) &&
-        this.type !== ImageType.Backdrop
-      ) {
-        return true;
-      } else if (
-        this.type === ImageType.Backdrop &&
-        (this.item?.BackdropImageTags as Array<never>).length > 0 &&
-        this.item?.ImageBlurHashes?.Backdrop &&
         Object.prototype.hasOwnProperty.call(
-          this.item?.ImageBlurHashes?.Backdrop as Record<string, string>,
-          (this.item?.BackdropImageTags as Array<string>)[0]
+          this.item?.ImageBlurHashes?.[this.type],
+          this.item?.PrimaryImageTag
         )
       ) {
         return true;
-      } else {
-        return false;
       }
+      return false;
     },
     getHash(): string {
-      if (this.type === ImageType.Backdrop) {
-        const tag = (this.item?.BackdropImageTags as Array<string>)[0];
+      if (!this.isPerson(this.item)) {
+        if (this.type === ImageType.Backdrop) {
+          const tag = (this.item?.BackdropImageTags as Array<string>)[0];
 
-        return ((this.item?.ImageBlurHashes as BaseItemDtoImageBlurHashes)
-          .Backdrop as Record<string, string>)[tag];
+          return ((this.item?.ImageBlurHashes as BaseItemDtoImageBlurHashes)
+            .Backdrop as Record<string, string>)[tag];
+        } else {
+          return ((this.item?.ImageBlurHashes as BaseItemDtoImageBlurHashes)[
+            this.type
+          ] as Record<string, string>)[
+            (this.item?.ImageTags as Record<string, string>)[this.type]
+          ];
+        }
       } else {
         return ((this.item?.ImageBlurHashes as BaseItemDtoImageBlurHashes)[
           this.type
-        ] as Record<string, string>)[
-          (this.item?.ImageTags as Record<string, string>)[this.type]
-        ];
+        ] as Record<string, string>)[this.item?.PrimaryImageTag as string];
       }
     },
     onError(): void {

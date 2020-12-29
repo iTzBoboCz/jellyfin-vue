@@ -53,7 +53,7 @@
             :to="getItemLink(relatedItem)"
           >
             <v-list-item-avatar>
-              <blurhash-image v-if="relatedItem" :item="relatedItem" />
+              <blurhash-image :item="relatedItem" />
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>{{ relatedItem.Name }}</v-list-item-title>
@@ -81,10 +81,8 @@
 import Vue from 'vue';
 import { mapActions } from 'vuex';
 import { BaseItemDto } from '@jellyfin/client-axios';
-import imageHelper from '~/mixins/imageHelper';
 
 export default Vue.extend({
-  mixins: [imageHelper],
   props: {
     /**
      * item.Id To be used to get related items

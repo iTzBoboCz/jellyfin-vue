@@ -99,11 +99,7 @@ export default Vue.extend({
     isValidTag(): boolean {
       if (!this.isPerson(this.item)) {
         if (
-          (this.item.ImageTags &&
-            Object.prototype.hasOwnProperty.call(
-              this.item?.ImageTags,
-              this.type
-            )) ||
+          this.item?.ImageTags?.[this.type] ||
           (this.type === ImageType.Backdrop && this.item?.BackdropImageTags)
         ) {
           return true;
@@ -128,31 +124,24 @@ export default Vue.extend({
           this.type === ImageType.Backdrop &&
           !this.item?.BackdropImageTags &&
           this.item.ImageBlurHashes?.Backdrop &&
-          Object.prototype.hasOwnProperty.call(
-            this.item.ImageBlurHashes?.Backdrop as Record<string, string>,
+          this.item.ImageBlurHashes?.Backdrop?.[
             (this.item.BackdropImageTags as Array<string>)[0]
-          )
+          ]
         ) {
           return true;
         } else if (
-          Object.prototype.hasOwnProperty.call(
-            this.item?.ImageBlurHashes,
-            this.type
-          )
+          this.item?.ImageBlurHashes?.[this.type] &&
+          this.item?.ImageTags?.[this.type] &&
+          this.item?.ImageBlurHashes?.[this.type]?.[
+            this.item?.ImageTags?.[this.type]
+          ]
         ) {
           return true;
         }
       } else if (
-        this.item.PrimaryImageTag &&
-        this.type === ImageType.Primary &&
-        Object.prototype.hasOwnProperty.call(
-          this.item?.ImageBlurHashes,
-          this.type
-        ) &&
-        Object.prototype.hasOwnProperty.call(
-          this.item?.ImageBlurHashes?.[this.type],
-          this.item?.PrimaryImageTag
-        )
+        this.item?.PrimaryImageTag &&
+        this.item?.ImageBlurHashes?.Primary &&
+        this.item?.ImageBlurHashes?.Primary?.[this.item?.PrimaryImageTag]
       ) {
         return true;
       }

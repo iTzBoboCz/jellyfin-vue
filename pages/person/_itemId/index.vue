@@ -129,11 +129,10 @@
 import Vue from 'vue';
 import { mapActions } from 'vuex';
 import { BaseItemDto } from '@jellyfin/client-axios';
-import imageHelper from '~/mixins/imageHelper';
 import timeUtils from '~/mixins/timeUtils';
 
 export default Vue.extend({
-  mixins: [imageHelper, timeUtils],
+  mixins: [timeUtils],
   data() {
     return {
       item: {} as BaseItemDto,

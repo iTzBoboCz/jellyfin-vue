@@ -33,10 +33,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import imageHelper from '~/mixins/imageHelper';
 
 export default Vue.extend({
-  mixins: [imageHelper],
   props: {
     items: {
       type: Array,

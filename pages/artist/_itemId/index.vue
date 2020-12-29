@@ -111,11 +111,10 @@ import Vue from 'vue';
 import { mapActions } from 'vuex';
 import { BaseItemDto } from '@jellyfin/client-axios';
 import htmlHelper from '~/mixins/htmlHelper';
-import imageHelper from '~/mixins/imageHelper';
 import timeUtils from '~/mixins/timeUtils';
 
 export default Vue.extend({
-  mixins: [htmlHelper, imageHelper, timeUtils],
+  mixins: [htmlHelper, timeUtils],
   data() {
     return {
       activeTab: 0,

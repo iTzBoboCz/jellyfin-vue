@@ -1,5 +1,5 @@
 <template>
-  <img :data-src="src" class="lazy-hidden" @error="onError" />
+  <img :data-src="src" :alt="alt" class="lazy-hidden" @error="onError" />
 </template>
 
 <script lang="ts">
@@ -76,6 +76,11 @@ export default Vue.extend({
     src: {
       type: String,
       required: true
+    },
+    alt: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   mounted() {

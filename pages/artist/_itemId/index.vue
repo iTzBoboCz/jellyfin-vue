@@ -4,11 +4,14 @@
       <v-col cols="9">
         <v-row>
           <v-col cols="9" class="d-flex flex-row">
-            <lazy-image
-              v-if="item.ImageTags && item.ImageTags.Primary"
+            <v-img
+              v-if="item.Id"
+              cover
+              aspect-ratio="1"
               class="person-image elevation-2 ml-2"
-              :src="`${$axios.defaults.baseURL}/Items/${item.Id}/Images/Primary`"
-            />
+            >
+              <blurhash-image :item="item" />
+            </v-img>
             <div class="ml-4 d-flex flex-column">
               <div
                 class="text-subtitle-1 text--secondary font-weight-medium text-capitalize"
@@ -51,8 +54,9 @@
                                 class="link"
                                 tag="h2"
                                 :to="`/item/${appearance.Id}/`"
-                                >{{ appearance.Name }}</nuxt-link
                               >
+                                {{ appearance.Name }}
+                              </nuxt-link>
                             </v-col>
                           </v-row>
                           <v-row>
@@ -73,14 +77,15 @@
                 <v-container>
                   <v-row>
                     <v-col>
-                      <lazy-image
-                        :src="`${$axios.defaults.baseURL}/Items/${item.Id}/Images/Backdrop`"
-                      />
+                      <v-img v-if="item.Id" cover>
+                        <blurhash-image :item="item" :type="'Backdrop'" />
+                      </v-img>
                       <div v-if="item.Overview">
                         <h2 class="text-h6 mt-2">
                           <span>{{ $t('biography') }}</span>
                         </h2>
                         <v-col cols="9" class="pl-0 pr-0">
+                          <!-- eslint-disable-next-line vue/no-v-html -->
                           <p class="item-overview" v-html="overview" />
                         </v-col>
                       </div>

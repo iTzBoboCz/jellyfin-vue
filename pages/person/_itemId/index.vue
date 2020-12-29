@@ -4,12 +4,14 @@
       <v-col cols="12">
         <v-row>
           <v-col cols="2">
-            <lazy-image
-              class="person-image elevation-2 ml-2"
+            <v-img
+              v-if="item"
               cover
               aspect-ratio="1"
-              :src="`${$axios.defaults.baseURL}/Items/${item.Id}/Images/Primary`"
-            />
+              class="person-image elevation-2 ml-2"
+            >
+              <blurhash-image :item="item" />
+            </v-img>
           </v-col>
           <v-col cols="7">
             <div
@@ -126,7 +128,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapActions } from 'vuex';
-import { BaseItemDto } from '@jellyfin/client-axios';
+import { BaseItemDto, ImageType } from '@jellyfin/client-axios';
 import imageHelper from '~/mixins/imageHelper';
 import timeUtils from '~/mixins/timeUtils';
 

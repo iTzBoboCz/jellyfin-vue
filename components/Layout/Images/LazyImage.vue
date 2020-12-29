@@ -4,6 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { sanitize } from 'dompurify';
 
 /**
  * Swaps the 'data-src' attribute with 'src' attribute.
@@ -33,7 +34,8 @@ function fillImageElement(elem: HTMLElement, url: string): void {
  *
  */
 function emptyImageElement(elem: HTMLElement): void {
-  const url = elem.getAttribute('src') as string;
+  const url = sanitize(elem.getAttribute('src') as string);
+
   elem.removeAttribute('src');
   elem.setAttribute('data-src', url);
   elem.classList.remove('lazy-show');
@@ -48,6 +50,7 @@ function emptyImageElement(elem: HTMLElement): void {
 function onIntersect(entry: IntersectionObserverEntry): void {
   const target = entry.target as HTMLElement;
   const isIntersecting = entry.isIntersecting;
+
   if (target) {
     const source = target.getAttribute('data-src');
     if (!isIntersecting && !source) {
@@ -55,7 +58,7 @@ function onIntersect(entry: IntersectionObserverEntry): void {
         emptyImageElement(target);
       });
     } else if (source && isIntersecting) {
-      fillImageElement(target, source);
+      fillImageElement(target, sanitize(source));
     }
   }
 }

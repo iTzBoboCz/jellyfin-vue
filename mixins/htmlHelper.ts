@@ -4,7 +4,7 @@
  * @mixin
  */
 import Vue from 'vue';
-import DOMPurify from 'dompurify';
+import { sanitize } from 'dompurify';
 
 declare module '@nuxt/types' {
   interface Context {
@@ -33,7 +33,7 @@ const htmlHelper = Vue.extend({
     sanitizeHtml(input: string): string {
       // Some providers have newlines, replace them with the proper tag.
       let cleanString = input.replace(/(?:\r\n|\r|\n)/g, '<br>');
-      cleanString = DOMPurify.sanitize(cleanString);
+      cleanString = sanitize(cleanString);
       return cleanString;
     }
   }
